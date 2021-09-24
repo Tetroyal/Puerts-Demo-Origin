@@ -1,0 +1,39 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "commonjs",
+        "jsx": "react",
+        "noImplicitAny": false,
+        "allowSyntheticDefaultImports": true,
+        "emitDecoratorMetadata": true,
+        "esModuleInterop": true,
+        "experimentalDecorators": true,
+        "resolveJsonModule": true,
+        "strict": false,
+        "strictNullChecks": false,
+        "strictPropertyInitialization": false,
+        "sourceMap": true,
+        "skipLibCheck": true,
+        "baseUrl": "src",
+        "paths": {
+            "*": [
+                "*"
+            ],
+            "puerts": [
+                "../Typing/puerts"
+            ],
+            "csharp": [
+                "../Typing/csharp"
+            ]
+        },
+        "typeRoots": [
+            "Typing",
+            "../../node_modules/@types"
+        ],
+        "outDir": "dist"
+    },
+    "include": [
+        "src/**/*",
+        "Typing/**/*"
+    ]
+}

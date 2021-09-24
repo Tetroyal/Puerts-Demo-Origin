@@ -1,14 +1,15 @@
-*.meta
-Library
-Logs
-Packages
-ProjectSettings
-Temp
-UserSettings
-*.sln
-*.csproj
+# *.meta
+/Library
+/Logs
+# Packages
+# ProjectSettings
+/Temp
+# UserSettings
+*.sln*
+*.csproj*
 .vscode
 *.log
 *.lighting
 .DS_Store
-node_modules
+/node_modules
+.idea/

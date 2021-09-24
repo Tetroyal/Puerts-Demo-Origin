@@ -1,0 +1,10 @@
+{
+    "name": "tsproj",
+    "displayName": "TsProj",
+    "version": "1.0.0",
+    "description": "ts project",
+    "scripts": {
+        "build": "npx tsc -p tsconfig.json",
+        "postbuild": "node copyJsFile.js dist ../../Assets/Scripts/Bundle"
+    }
+}
