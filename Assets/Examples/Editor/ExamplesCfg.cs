@@ -8,7 +8,9 @@
 using System.Collections.Generic;
 using Puerts;
 using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 //1、配置类必须打[Configure]标签
 //2、必须放Editor目录
@@ -16,13 +18,16 @@ using UnityEngine;
 public class ExamplesCfg
 {
     [Binding]
-    static IEnumerable<Type> Bindings
-    {
-        get
-        {
-            return new List<Type>()
-            {
+    static IEnumerable<Type> Bindings {
+        get {
+            return new List<Type>() {
                 typeof(Debug),
+                typeof(Array),
+                typeof(Button),
+                typeof(Text),
+                typeof(TMP_Text),
+                typeof(InputField),
+                typeof(ScrollRect),
                 typeof(PuertsTest.TestClass),
                 typeof(Vector3),
                 typeof(List<int>),
@@ -44,7 +49,6 @@ public class ExamplesCfg
                 typeof(RenderMode),
                 typeof(Behaviour),
                 typeof(MonoBehaviour),
-
                 typeof(UnityEngine.EventSystems.UIBehaviour),
                 typeof(UnityEngine.UI.Selectable),
                 typeof(UnityEngine.UI.Button),
@@ -54,7 +58,6 @@ public class ExamplesCfg
                 typeof(UnityEngine.UI.Toggle),
                 typeof(UnityEngine.UI.Toggle.ToggleEvent),
                 typeof(UnityEngine.Events.UnityEvent<bool>),
-
                 typeof(PuertsDeclareTest.Plants.pumkinPeaShooter),
                 typeof(PuertsDeclareTest.Plants.Shootable),
                 typeof(PuertsDeclareTest.Zombies.Walkable),
@@ -65,25 +68,23 @@ public class ExamplesCfg
     }
 
     [BlittableCopy]
-    static IEnumerable<Type> Blittables
-    {
-        get
-        {
-            return new List<Type>()
-            {
+    static IEnumerable<Type> Blittables {
+        get {
+            return new List<Type>() {
                 //打开这个可以优化Vector3的GC，但需要开启unsafe编译
                 //typeof(Vector3),
             };
         }
     }
-    
+
     [Filter]
-    static bool FilterMethods(System.Reflection.MemberInfo mb)
+    static bool FilterMethods( System.Reflection.MemberInfo mb )
     {
         // 排除 MonoBehaviour.runInEditMode, 在 Editor 环境下可用发布后不存在
-        if (mb.DeclaringType == typeof(MonoBehaviour) && mb.Name == "runInEditMode") {
+        if ( mb.DeclaringType == typeof(MonoBehaviour) && mb.Name == "runInEditMode" ) {
             return true;
         }
+
         return false;
     }
 }

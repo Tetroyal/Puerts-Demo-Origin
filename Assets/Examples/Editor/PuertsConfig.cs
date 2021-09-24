@@ -12,94 +12,89 @@ using System.Collections.Generic;
 public class PuertsConfig
 {
     [Typing]
-    static IEnumerable<Type> Typeing
-    {
-        get
-        {
-            return new List<Type>()
-            {
+    static IEnumerable<Type> Typeing {
+        get {
+            return new List<Type>() {
                 //仅生成ts接口, 不生成C#静态代码
                 //typeof(Dictionary<int,int>)
             };
         }
     }
+
     [BlittableCopy]
-    static IEnumerable<Type> Blittables
-    {
-        get
-        {
-            return new List<Type>()
-            {
+    static IEnumerable<Type> Blittables {
+        get {
+            return new List<Type>() {
                 //打开这个可以优化Vector3的GC，但需要开启unsafe编译
                 //typeof(Vector3),
             };
         }
     }
-    static IEnumerable<Type> Bindings
-    {
-        get
-        {
-            return new List<Type>()
-            {
-               //直接指定的类型
+
+    static IEnumerable<Type> Bindings {
+        get {
+            return new List<Type>() {
+                //直接指定的类型
                 typeof(JsEnv),
                 typeof(ILoader),
             };
         }
     }
+
     [Binding]
-    static IEnumerable<Type> DynamicBindings
-    {
-        get
-        {
+    static IEnumerable<Type> DynamicBindings {
+        get {
             // 在这里添加名字空间
-            var namespaces = new List<string>()
-            {
+            var namespaces = new List<string>() {
                 "UnityEngine",
+                "Runtime",
                 "UnityEngine.UI",
             };
-            var unityTypes = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                              where !(assembly.ManifestModule is System.Reflection.Emit.ModuleBuilder)
-                              from type in assembly.GetExportedTypes()
-                              where type.Namespace != null && namespaces.Contains(type.Namespace) && !IsExcluded(type)
-                              select type);
+            var unityTypes = ( from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                where !( assembly.ManifestModule is System.Reflection.Emit.ModuleBuilder )
+                from type in assembly.GetExportedTypes()
+                where type.Namespace != null && namespaces.Contains( type.Namespace ) &&
+                    !IsExcluded( type )
+                select type );
             string[] customAssemblys = new string[] {
                 "Assembly-CSharp",
+                "Assembly-CSharp-firstpass",
+                "Unity.TextMeshPro",
+                "Unity.Timeline",
+                "Unity.Addressables",
+                "Unity.ResourceManager",
             };
-            var customTypes = (from assembly in customAssemblys.Select(s => Assembly.Load(s))
-                               where !(assembly.ManifestModule is System.Reflection.Emit.ModuleBuilder)
-                               from type in assembly.GetExportedTypes()
-                               where type.Namespace == null || !type.Namespace.StartsWith("Puerts")
-                                    && !IsExcluded(type)
-                               select type);
-            return unityTypes
-                .Concat(customTypes)
-                .Concat(Bindings)
-                .Distinct();
+            var customTypes = ( from assembly in customAssemblys.Select( s => Assembly.Load( s ) )
+                where !( assembly.ManifestModule is System.Reflection.Emit.ModuleBuilder )
+                from type in assembly.GetExportedTypes()
+                where type.Namespace == null ||
+                    !type.Namespace.StartsWith( "Puerts" ) && !IsExcluded( type )
+                select type );
+            return unityTypes.Concat( customTypes ).Concat( Bindings ).Distinct();
         }
     }
-    static bool IsExcluded(Type type)
+
+    static bool IsExcluded( Type type )
     {
-        if (type == null)
+        if ( type == null )
             return false;
-
-        string assemblyName = Path.GetFileName(type.Assembly.Location);
-        if (excludeAssemblys.Contains(assemblyName))
+        string assemblyName = Path.GetFileName( type.Assembly.Location );
+        if ( excludeAssemblys.Contains( assemblyName ) )
             return true;
-
-        string fullname = type.FullName != null ? type.FullName.Replace("+", ".") : "";
-        if (excludeTypes.Contains(fullname))
+        string fullname = type.FullName != null ? type.FullName.Replace( "+", "." ) : "";
+        if ( excludeTypes.Contains( fullname ) )
             return true;
-        return IsExcluded(type.BaseType);
+        return IsExcluded( type.BaseType );
     }
+
     //需要排除的程序集
-    static List<string> excludeAssemblys = new List<string>{
+    static List<string> excludeAssemblys = new List<string> {
         "UnityEditor.dll",
         "Assembly-CSharp-Editor.dll",
     };
+
     //需要排除的类型
-    static List<string> excludeTypes = new List<string>
-    {
+    static List<string> excludeTypes = new List<string> {
         "UnityEngine.iPhone",
         "UnityEngine.iPhoneTouch",
         "UnityEngine.iPhoneKeyboard",
